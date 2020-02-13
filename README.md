@@ -1,21 +1,25 @@
-#Criar banco de dados "funcionarios"
+## Criar banco de dados "funcionarios"
 
 
-Após a instalação do software padrao, acesse o servidor com o comando "mysql -u root -p";
-
-
-
-Use o comando CREATE DATABASE funcionarios;
+Após a instalação do software padrao, acesse o servidor com o comando `mysql -u root -p`;
 
 
 
-Configurar dados do banco no arquivo .env na raiz do projeto;
+Use o comando `CREATE DATABASE funcionarios`;
 
 
 
-No terminal, execute o comando "php artisan migrate" para criar as tabelas em seu banco;
+Configurar dados do banco no arquivo `.env` na raiz do projeto;
 
 
 
-Utilize o artisan como servidor com "php artisan serve";
+No terminal, execute o comando `php artisan migrate` para criar as tabelas em seu banco;
+
+
+
+Utilize o artisan como servidor com `composer update` para atualizar as dependencias;
+
+
+
+Utilize o artisan como servidor com `php artisan serve`;
 
