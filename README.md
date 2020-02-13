@@ -13,11 +13,11 @@ Configurar dados do banco no arquivo `.env` na raiz do projeto;
 
 
 
-No terminal, execute o comando `php artisan migrate` para criar as tabelas em seu banco;
-
-
-
 Utilize o artisan como servidor com `composer update` para atualizar as dependencias;
+
+
+
+No terminal, execute o comando `php artisan migrate` para criar as tabelas em seu banco;
 
 
 
