@@ -1,8 +1,8 @@
 <?php
 namespace App\Api;
 
-class ApiError {
-    public static function erroMessage($mensagem, $status)
+class ApiMessage {
+    public static function message($mensagem, $status)
     {
         return [
             'data' => [
