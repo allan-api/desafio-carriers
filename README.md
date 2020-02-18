@@ -1,19 +1,16 @@
 ## 
 ## Configurando a aplicação
 
-Configurar dados do banco no arquivo `.env` na raiz do projeto;
+Não será necessário configurar o `.env` no projeto;
 
 
-Utilize o comando `composer update` para atualizar as dependencias;
+Utilize o comando `composer update` para atualizar as dependências;
 
 
 ## 
 ## Criar banco de dados "funcionarios"
 
-Acesse o servidor com o comando `mysql -u root -p`, certifique-se de que tenha o MySQL em sua maquina;
-
-
-Use o comando `CREATE DATABASE funcionarios`;
+O sistema está configurado para usar o sqlite, um banco de dados do próprio laravel, certifique-se de que tenha um arquivo nomeado `database.sql` dentro da pasta `database` na raiz. Se não tiver, fique a vontade para criá-lo, ou excluir o seu conteúdo.
 
 
 ## 
@@ -28,4 +25,6 @@ Execute `php artisan db:seed` para que seja inserido 20 funcionários no banco ;
 ## Iniciando
 
 Utilize o artisan como servidor com `php artisan serve`;
+
+Por enquanto o sistema retorna apenas Json, utilize um httpClient como Postman para uma melhor experiência.
 
