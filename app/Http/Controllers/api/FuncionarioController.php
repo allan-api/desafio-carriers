@@ -10,19 +10,18 @@ use DB;
 
 class FuncionarioController extends Controller
 {
-    
+
     public function index()
     {
-        try{
+        try {
             return response()->json(Funcionario::paginate(10)); //10 funcionarios por pagina
-        } catch(\Exception $e) {
-            if(config('app.debug')) { //verifica se o debug está ativo
+        } catch (\Exception $e) {
+            if (config('app.debug')) { //verifica se o debug está ativo
                 return response()->json(ApiMessage::message($e->getMessage(), ''));
             } else {
                 return response()->json(ApiMessage::message('Houve um erro ao realizar a operação', 500));
             }
         }
-        
     }
 
 
@@ -30,11 +29,11 @@ class FuncionarioController extends Controller
     {
         try {
             Funcionario::create($request->all());
-    
+
             $return = ApiMessage::message('Funcionário criado com sucesso', 201);
             return response()->json($return, 201);
-        }catch(\Exception $e) {
-            if(config('app.debug')) { //verifica se o debug está ativo
+        } catch (\Exception $e) {
+            if (config('app.debug')) { //verifica se o debug está ativo
                 return response()->json(ApiMessage::message($e->getMessage(), ''));
             } else {
                 return response()->json(ApiMessage::message('Houve um erro ao realizar a operação', 500));
@@ -58,8 +57,8 @@ class FuncionarioController extends Controller
 
         return response()->json(ApiMessage::message('Funcionário atualizado com sucesso!', ''));
     }
-    
-    
+
+
     public function destroy($id)
     {
         $return = Funcionario::FindOrFail($id);
@@ -70,23 +69,20 @@ class FuncionarioController extends Controller
     public function estatisticas()
     {
         try {
-        
+
             $qtdMasculino = count(DB::select("SELECT * FROM funcionarios WHERE sexo = 'masculino'"));
             $qtdFeminino  = count(DB::select("SELECT * FROM funcionarios WHERE sexo = 'feminino'"));
             $arrMediaFuncionarios = DB::select("SELECT avg(idade) FROM funcionarios");
             //foreachs para remover as keys e limpar o json
-            foreach($arrMediaFuncionarios[0] as $key => $value) 
-            {
-                $mediaFuncionarios = floatval($value); 
+            foreach ($arrMediaFuncionarios[0] as $key => $value) {
+                $mediaFuncionarios = floatval($value);
             }
-            $maxIdadeFuncionario = max(DB::select("SELECT idade FROM funcionarios")); 
-            foreach($maxIdadeFuncionario as  $key => $value)
-            {
+            $maxIdadeFuncionario = max(DB::select("SELECT idade FROM funcionarios"));
+            foreach ($maxIdadeFuncionario as  $key => $value) {
                 $FuncionarioMaisVelho = $value;
             }
             $minIdadeFuncionario = min(DB::select("SELECT idade FROM funcionarios"));
-            foreach($minIdadeFuncionario as  $key => $value)
-            {
+            foreach ($minIdadeFuncionario as  $key => $value) {
                 $funcionarioMaisNovo = $value;
             }
             //endpoint de estatísticas
@@ -100,20 +96,13 @@ class FuncionarioController extends Controller
 
                 ]
             ];
-            if(isNull($data)):
-                return Response()->json(ApiMessage::message('Nenhum funcionário cadastrado', 400));
-            else:
-                return response()->json($data);
-            endif;
-
-            } catch (\Exception $e) {
-            if(config('app.debug')) {
+            return response()->json($data);
+        } catch (\Exception $e) {
+            if (config('app.debug')) {
                 ApiMessage::message($e->getMessage(), '');
             } else {
                 return response()->json('Houve um erro ao realizar a operação, certifique-se se há funcionário cadastrado ');
             }
         }
-
     }
 }
-
