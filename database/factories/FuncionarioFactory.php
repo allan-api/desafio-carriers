@@ -15,3 +15,5 @@ $factory->define(Funcionario::class, function (Faker $faker) {
         'sexo'      => $faker->randomElement(['masculino', 'femino']),
     ];
 });
+
+

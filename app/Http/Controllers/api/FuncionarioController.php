@@ -16,7 +16,11 @@ class FuncionarioController extends Controller
         try{
             return response()->json(Funcionario::paginate(10)); //10 funcionarios por pagina
         } catch(\Exception $e) {
-            return response()->json(ApiMessage::message('Houve um erro ao realizar a operação', 500));
+            if(config('app.debug')) { //verifica se o debug está ativo
+                return response()->json(ApiMessage::message($e->getMessage(), ''));
+            } else {
+                return response()->json(ApiMessage::message('Houve um erro ao realizar a operação', 500));
+            }
         }
         
     }
@@ -96,9 +100,13 @@ class FuncionarioController extends Controller
 
                 ]
             ];
+            if(isNull($data)):
+                return Response()->json(ApiMessage::message('Nenhum funcionário cadastrado', 400));
+            else:
+                return response()->json($data);
+            endif;
 
-            return response()->json($data);
-        } catch (\Exception $e) {
+            } catch (\Exception $e) {
             if(config('app.debug')) {
                 ApiMessage::message($e->getMessage(), '');
             } else {
