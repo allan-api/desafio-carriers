@@ -8,13 +8,22 @@ use Illuminate\Http\Request;
 use App\models\Funcionario;
 use DB;
 
+
 class FuncionarioController extends Controller
 {
+
+    protected $funcionario;
+
+    public function __construct(Funcionario $funcionario)
+    {
+        $this->funcionario = $funcionario;
+    }
 
     public function index()
     {
         try {
-            return response()->json(Funcionario::paginate(10)); //10 funcionarios por pagina
+            $funcionario = new Funcionario;
+            return $funcionario->indexModel();
         } catch (\Exception $e) {
             if (config('app.debug')) { //verifica se o debug está ativo
                 return response()->json(ApiMessage::message($e->getMessage(), ''));
@@ -28,8 +37,8 @@ class FuncionarioController extends Controller
     public function store(Request $request)
     {
         try {
-            Funcionario::create($request->all());
-
+            $funcionario = new Funcionario;
+            $funcionario->storeModel($request);
             $return = ApiMessage::message('Funcionário criado com sucesso', 201);
             return response()->json($return, 201);
         } catch (\Exception $e) {
@@ -40,62 +49,63 @@ class FuncionarioController extends Controller
             }
         }
     }
-
+    
     public function show($id)
     {
-        $data = [
-            'data' => $id
-        ];
-        return Funcionario::FindOrFail($data);
+        try {
+            $funcionario = new Funcionario;
+            return response()->json($funcionario->showModel($id));
+        } catch (\Exception $e) {
+            if (config('app.debug')) { //verifica se o debug está ativo
+                return response()->json(ApiMessage::message($e->getMessage(), ''));
+            } else {
+                return response()->json(ApiMessage::message('Houve um erro ao realizar a operação', 500));
+            }
+        }
     }
-
-
+    
+    
     public function update(Request $request, $id)
     {
-        $return = Funcionario::FindOrFail($id);
-        $return->update($request->all());
-
-        return response()->json(ApiMessage::message('Funcionário atualizado com sucesso!', ''));
+        try {
+            $funcionario = new Funcionario;
+            $resp = $funcionario->updateModel($request, $id);
+            if($resp == "sucess"){
+                return response()->json(ApiMessage::message('Funcionário atualizado com sucesso!', ''));
+            }
+        } catch (\Exception $e) {
+            if (config('app.debug')) { //verifica se o debug está ativo
+                return response()->json(ApiMessage::message($e->getMessage(), ''));
+            } else {
+                return response()->json(ApiMessage::message('Houve um erro ao realizar a operação', 500));
+            }
+        }
     }
-
-
+    
+    
     public function destroy($id)
     {
-        $return = Funcionario::FindOrFail($id);
-        $return->delete();
-        return response()->json(ApiMessage::message('Funcionário excluído com sucesso!', ''));
+        try {
+            $funcionario = new Funcionario;
+            $resp = $funcionario->destroyModel($id);
+            if($resp == "sucess"){
+                return response()->json(ApiMessage::message('Funcionário excluído com sucesso!', ''));
+            }
+        } catch (\Exception $e) {
+            if (config('app.debug')) { //verifica se o debug está ativo
+                return response()->json(ApiMessage::message($e->getMessage(), ''));
+            } else {
+                return response()->json(ApiMessage::message('Houve um erro ao realizar a operação', 500));
+            }
+        }
     }
-
-    public function estatisticas()
+        
+        public function estatisticas()
     {
         try {
-
-            $qtdMasculino = count(DB::select("SELECT * FROM funcionarios WHERE sexo = 'masculino'"));
-            $qtdFeminino  = count(DB::select("SELECT * FROM funcionarios WHERE sexo = 'feminino'"));
-            $arrMediaFuncionarios = DB::select("SELECT avg(idade) FROM funcionarios");
-            //foreachs para remover as keys e limpar o json
-            foreach ($arrMediaFuncionarios[0] as $key => $value) {
-                $mediaFuncionarios = floatval($value);
-            }
-            $maxIdadeFuncionario = max(DB::select("SELECT idade FROM funcionarios"));
-            foreach ($maxIdadeFuncionario as  $key => $value) {
-                $FuncionarioMaisVelho = $value;
-            }
-            $minIdadeFuncionario = min(DB::select("SELECT idade FROM funcionarios"));
-            foreach ($minIdadeFuncionario as  $key => $value) {
-                $funcionarioMaisNovo = $value;
-            }
-            //endpoint de estatísticas
-            $data = [
-                'data' => [
-                    'Quantidade de funcionários do sexo masculino'  => $qtdMasculino,
-                    'Quantidade de funcionárias do sexo feminino'   => $qtdFeminino,
-                    'Média de idade dos funcionários(as)'           => $mediaFuncionarios,
-                    'Idade do funcionário(a) mais novo(a)'          => $funcionarioMaisNovo,
-                    'Idade do funcionário(a) mais velho(a)'         => $FuncionarioMaisVelho,
-
-                ]
-            ];
+            $funcionario = new Funcionario;
+            $data = $funcionario->estatisticasModel();
+            
             return response()->json($data);
         } catch (\Exception $e) {
             if (config('app.debug')) {
